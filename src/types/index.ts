@@ -12,7 +12,7 @@ export interface ResponseRegister {
 export interface User {
     id:        number;
     email:     string;
-    role:      string;
+    role:      "ADMIN" | "SELLER" | "CUSTOMER";
     isActive:  boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -46,6 +46,7 @@ export interface Category {
 export interface Product {
     id:          number;
     name:        string;
+    stock:       number;
     description: string;
     price:       number;
     imageUrl:    string;
@@ -92,3 +93,8 @@ export interface Pagination {
     limit:      number;
     totalPages: number;
 }
+
+export interface ResponseMessage {
+    success: boolean;
+    message: string;
+  }

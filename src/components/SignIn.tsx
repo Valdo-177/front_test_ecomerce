@@ -27,6 +27,7 @@ import { ResponseLogin } from "@/types";
 import { useAuthStore } from "@/context/useAuthStore";
 import { useLogin } from "@/hooks/useAuth";
 import { LoadingSpinner } from "./ui/LoadingSpinner";
+import { useRouter } from "next/navigation";
 
 const SignIn = ({
   onChange,
@@ -43,20 +44,26 @@ const SignIn = ({
     },
   });
   const { login } = useAuthStore();
+  const { push } = useRouter();
 
   const loginMutation = useLogin();
 
   const onSubmit = (data: LoginFormData) => {
     loginMutation.mutate(data, {
       onSuccess: (response: ResponseLogin) => {
+        if (response.user.role === "ADMIN") {
+          push("/admin/users");
+          console.log('aki')
+        }
+        console.log("user: ",response.user.role);
         toast(response.message);
         onclose();
         login(response.user, response.token);
-    },
-    onError: (error: any) => {
+      },
+      onError: (error: any) => {
         console.error(
-            "Login failed:",
-            error.response?.data?.message || error.message
+          "Login failed:",
+          error.response?.data?.message || error.message
         );
         toast.error(error.message);
       },

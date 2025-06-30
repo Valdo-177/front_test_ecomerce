@@ -23,13 +23,17 @@ import {
 } from "lucide-react";
 import { ProductDetailSkeleton } from "@/components/ui/ProductDetailSkeleton";
 import { useAuthStore } from "@/context/useAuthStore";
+import { useCartStore } from "@/context/useCartStore";
+import { toast } from "sonner";
 
 const ProductPage = () => {
   const params = useParams();
   const productId = Number(params.id);
   const { data: product, isLoading, error } = useProductById(productId);
   const [quantity, setQuantity] = useState(1);
-  const { isAuthenticated, setOpenLoginDialog } = useAuthStore();
+  const { isAuthenticated, setOpenLoginDialog, user } = useAuthStore();
+  const userRole = user?.role;
+  const { addToCart } = useCartStore();
 
   const ImageUrl = `http://localhost:5000${product?.imageUrl}`;
 
@@ -40,12 +44,21 @@ const ProductPage = () => {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
     if (!isAuthenticated) {
       setOpenLoginDialog(true);
       return;
     }
-    console.log("Added to cart:", { productId, quantity });
+
+    if (product) {
+      addToCart(product, quantity);
+    } else {
+      toast(
+        "No se pudo agregar este producto al carrito. Intenta nuevamente más tarde."
+      );
+    }
   };
 
   const handleBuyNow = () => {
@@ -142,53 +155,45 @@ const ProductPage = () => {
 
           <Separator />
 
-          {/* Controles de cantidad */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <span className="font-normal">Quantity:</span>
-              <div className="flex items-center border rounded-lg">
+          {userRole !== "ADMIN" && userRole !== "SELLER" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <span className="font-normal">Quantity:</span>
+                <div className="flex items-center border rounded-lg">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleQuantityChange(-1)}
+                    disabled={quantity <= 1}
+                    className="px-3 font-normal"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </Button>
+                  <span className="px-4 py-2 font-medium">{quantity}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleQuantityChange(1)}
+                    disabled={quantity >= product.stock}
+                    className="px-3 font-normal"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleQuantityChange(-1)}
-                  disabled={quantity <= 1}
-                  className="px-3 font-normal"
+                  onClick={handleAddToCart}
+                  className="flex-1 bg-[#9C6644] hover:bg-[#824f3b] text-white"
+                  disabled={product.stock === 0}
                 >
-                  <Minus className="w-4 h-4" />
-                </Button>
-                <span className="px-4 py-2 font-medium">{quantity}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleQuantityChange(1)}
-                  disabled={quantity >= product.stock}
-                  className="px-3 font-normal"
-                >
-                  <Plus className="w-4 h-4" />
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  ADD TO CART
                 </Button>
               </div>
             </div>
-
-            {/* Botones de acción */}
-            <div className="flex gap-3">
-              <Button
-                onClick={handleAddToCart}
-                className="flex-1 bg-[#9C6644] hover:bg-[#824f3b] text-white"
-                disabled={product.stock === 0}
-              >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                ADD TO CART
-              </Button>
-              <Button
-                onClick={handleBuyNow}
-                variant="outline"
-                className="flex-1 bg-transparent"
-                disabled={product.stock === 0}
-              >
-                BUY NOW
-              </Button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -95,37 +95,3 @@ export const ProductGrid = () => {
     </div>
   );
 };
-
-// "use client";
-
-// import { useAllProducts } from "@/hooks/useProducts";
-// import { ProductCard } from "./ui/ProductCard";
-// import { Category } from "@/types";
-
-// export const ProductGrid = () => {
-//   const { data, isLoading, error } = useAllProducts();
-
-//   if (isLoading) return <p>Loading...</p>;
-//   if (error) return <p>Failed to fetch products.</p>;
-
-//   return (
-//     <div className="space-y-10">
-//       {data.map((category: Category) => (
-//         <div key={category.id}>
-//           <h2 className="text-xl font-bold mb-4">{category.name}</h2>
-//           {category.products.length === 0 ? (
-//             <p className="text-sm text-gray-500">
-//               No products in this category.
-//             </p>
-//           ) : (
-//             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-//               {category.products.map((product) => (
-//                 <ProductCard key={product.id} product={product} />
-//               ))}
-//             </div>
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
