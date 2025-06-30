@@ -6,16 +6,11 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { WithRole } from "@/components/layout/WithRole";
 import {
-  Users,
   ShoppingBag,
   Package,
-  BarChart3,
   Settings,
-  LogOut,
   ChevronRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface SidebarLinkProps {
@@ -70,31 +65,32 @@ const SidebarLink = ({ href, label, icon, badge }: SidebarLinkProps) => {
   );
 };
 
-const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+const SellerLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <aside className="w-72 bg-white border-r border-gray-200 shadow-sm">
         <nav className="p-4 space-y-2">
           <div className="mb-4">
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2">
-              Gestión Principal
+              Panel de Vendedor
             </h3>
             <div className="space-y-1">
               <SidebarLink
-                href="/admin/users"
-                label="Usuarios"
-                icon={<Users className="w-5 h-5" />}
-              />
-              <SidebarLink
-                href="/admin/orders"
-                label="Órdenes"
+                href="/seller/orders"
+                label="Mis Órdenes"
                 icon={<ShoppingBag className="w-5 h-5" />}
               />
               <SidebarLink
-                href="/admin/products"
-                label="Productos"
+                href="/seller/product"
+                label="Mis Productos"
                 icon={<Package className="w-5 h-5" />}
               />
+              {/* Si quieres agregar ajustes del perfil u otras opciones */}
+              {/* <SidebarLink
+                href="/seller/settings"
+                label="Configuración"
+                icon={<Settings className="w-5 h-5" />}
+              /> */}
             </div>
           </div>
         </nav>
@@ -102,11 +98,11 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
       <main className="flex-1 overflow-auto">
         <div className="p-8">
-          <WithRole allowedRoles={"ADMIN"}>{children}</WithRole>
+          <WithRole allowedRoles={"SELLER"}>{children}</WithRole>
         </div>
       </main>
     </div>
   );
 };
 
-export default AdminLayout;
+export default SellerLayout;

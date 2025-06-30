@@ -5,6 +5,7 @@ import { useCartStore } from "@/context/useCartStore";
 import { useAuthStore } from "@/context/useAuthStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Order } from "@/types";
 
 // Utilidad para extraer mensaje de error
 const getErrorMessage = (error: unknown): string => {
@@ -88,6 +89,24 @@ export const useUpdateOrder = () => {
         },
     });
 };
+
+export const useMyOrders = () => {
+    const { token } = useAuthStore();
+
+    return useQuery<Order[]>({
+        queryKey: ['my-orders'],
+        queryFn: async () => {
+            const res = await api.get<{ orders: Order[] }>('/orders', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            return res.data.orders;
+        },
+    });
+};
+
 
 export const useDeleteOrder = () => {
     const token = useAuthStore((s) => s.token);

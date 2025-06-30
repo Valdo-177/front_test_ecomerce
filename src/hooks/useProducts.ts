@@ -8,8 +8,8 @@ import {
   ResponseProductById,
   ResponseMessage,
 } from "@/types";
+import { useAuthStore } from "@/context/useAuthStore";
 
-// Obtener todos los productos agrupados por categoría
 export const useAllProducts = () => {
   return useQuery<Category[]>({
     queryKey: ["all-products"],
@@ -20,7 +20,6 @@ export const useAllProducts = () => {
   });
 };
 
-// Obtener detalle de producto por ID
 export const useProductById = (productId: number) => {
   return useQuery<ProductDetails>({
     queryKey: ["product", productId],
@@ -32,25 +31,36 @@ export const useProductById = (productId: number) => {
   });
 };
 
-// Obtener productos del usuario autenticado (SELLER o ADMIN)
 export const useMyProducts = () => {
+  const { token } = useAuthStore();
+
   return useQuery<Product[]>({
     queryKey: ["my-products"],
     queryFn: async () => {
-      const res = await api.get<{ message: string; products: Product[] }>("/product/");
+      const res = await api.get<{ message: string; products: Product[] }>(
+        "/product/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return res.data.products;
     },
   });
 };
 
-// Crear producto
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
+  const { token } = useAuthStore();
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
       const res = await api.post("/product", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
       return res.data;
     },
@@ -61,9 +71,10 @@ export const useCreateProduct = () => {
   });
 };
 
-// Actualizar producto
+
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
+  const { token } = useAuthStore();
 
   return useMutation({
     mutationFn: async ({
@@ -73,7 +84,11 @@ export const useUpdateProduct = () => {
       productId: number;
       data: Partial<Omit<Product, "id" | "createdAt" | "updatedAt" | "imageUrl">>;
     }) => {
-      const res = await api.put(`/product/${productId}`, data);
+      const res = await api.put(`/product/${productId}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return res.data;
     },
     onSuccess: () => {
@@ -83,13 +98,18 @@ export const useUpdateProduct = () => {
   });
 };
 
-// Eliminar producto
+
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
+  const { token } = useAuthStore();
 
   return useMutation({
     mutationFn: async (productId: number) => {
-      const res = await api.delete<ResponseMessage>(`/product/${productId}`);
+      const res = await api.delete<ResponseMessage>(`/product/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return res.data;
     },
     onSuccess: () => {
@@ -98,3 +118,4 @@ export const useDeleteProduct = () => {
     },
   });
 };
+

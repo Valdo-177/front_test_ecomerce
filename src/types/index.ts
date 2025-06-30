@@ -1,100 +1,118 @@
 export interface ResponseLogin {
     message: string;
-    token:   string;
-    user:    User;
+    token: string;
+    user: User;
 }
 
 export interface ResponseRegister {
     message: string;
-    user:    User;
+    user: User;
 }
 
 export interface User {
-    id:        number;
-    email:     string;
-    role:      "ADMIN" | "SELLER" | "CUSTOMER";
-    isActive:  boolean;
+    id: number;
+    email: string;
+    role: "ADMIN" | "SELLER" | "CUSTOMER";
+    isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
-    profile:   Profile;
+    profile: Profile;
 }
 
 export interface Profile {
-    id:          number;
-    fullName:    string;
-    avatarUrl:   string;
-    bio:         null;
+    id: number;
+    fullName: string;
+    avatarUrl: string;
+    bio: null;
     phoneNumber: string;
-    address:     null;
-    userId:      number;
+    address: null;
+    userId: number;
 }
 
-export interface ResponseAllProducts  {
-    message:    string;
+export interface ResponseAllProducts {
+    message: string;
     categories: Category[];
 }
 
 export interface Category {
-    id:        number;
-    name:      string;
-    imageUrl:  string;
+    id: number;
+    name: string;
+    imageUrl: string;
     createdAt: Date;
     updatedAt: Date;
-    products:  Product[];
+    products: Product[];
 }
 
 export interface Product {
-    id:          number;
-    name:        string;
-    stock:       number;
+    id: number;
+    name: string;
+    stock: number;
     description: string;
-    price:       number;
-    imageUrl:    string;
-    createdAt:   Date;
-    updatedAt:   Date;
-    categoryId:  number;
+    price: number;
+    imageUrl: string;
+    createdAt: Date;
+    updatedAt: Date;
+    categoryId: number;
 }
 
-export interface ResponseProductById  {
+export interface ResponseProductById {
     message: string;
     product: ProductDetails;
 }
 
 export interface ProductDetails {
-    id:          number;
-    name:        string;
+    id: number;
+    name: string;
     description: string;
-    price:       number;
-    stock:       number;
-    imageUrl:    string;
-    categoryId:  number;
-    sellerId:    number;
-    createdAt:   Date;
-    updatedAt:   Date;
-    category:    Category;
-    seller:      Seller;
+    price: number;
+    stock: number;
+    imageUrl: string;
+    categoryId: number;
+    sellerId: number;
+    createdAt: Date;
+    updatedAt: Date;
+    category: Category;
+    seller: Seller;
 }
 
 export interface Seller {
-    id:      number;
-    email:   string;
+    id: number;
+    email: string;
     profile: Profile;
 }
 
 export interface ResponseProductsByCategory {
-    message:    string;
-    category:   Category;
-    products:   Product[];
+    message: string;
+    category: Category;
+    products: Product[];
     pagination: Pagination;
 }
 export interface Pagination {
-    total:      number;
-    page:       number;
-    limit:      number;
+    total: number;
+    page: number;
+    limit: number;
     totalPages: number;
 }
 
 export interface ResponseMessage {
     success: boolean;
     message: string;
-  }
+}
+
+export interface Order {
+    id: string;
+    status: 'PENDING' | 'SHIPPED' | 'DELIVERED' | string; 
+    createdAt: string;
+    updatedAt: string;
+    orderItems: {
+        id: string;
+        quantity: number;
+        product: {
+            id: string;
+            name: string;
+            description: string;
+            imageUrl: string;
+            price: number;
+        };
+    }[];
+}

@@ -18,7 +18,8 @@ const LogoutButton = () => {
   const { user, logout } = useAuthStore();
   const { push } = useRouter();
 
-  const isAdmin = user?.role === "ADMIN";
+  const role = user?.role;
+  const fullName = user?.profile.fullName;
 
   return (
     <DropdownMenu>
@@ -26,7 +27,7 @@ const LogoutButton = () => {
         <div className="flex text-white items-center gap-1 cursor-pointer">
           <User strokeWidth={1.4} />
           <span className="inline-block max-w-[120px] whitespace-nowrap overflow-hidden text-ellipsis">
-            {user?.profile.fullName}
+            {fullName}
           </span>
         </div>
       </DropdownMenuTrigger>
@@ -35,8 +36,7 @@ const LogoutButton = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        {/* Opciones para Admin */}
-        {isAdmin && (
+        {role === "ADMIN" && (
           <>
             <DropdownMenuItem asChild>
               <Link href="/admin/users">Users</Link>
@@ -51,7 +51,27 @@ const LogoutButton = () => {
           </>
         )}
 
-        {/* Opción de logout */}
+        {role === "SELLER" && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/seller/orders">My Orders</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/seller/product">My Products</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+
+        {role === "CUSTOMER" && (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/orders">My Orders</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
+
         <DropdownMenuItem
           onClick={() => {
             logout();

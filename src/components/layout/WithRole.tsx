@@ -6,7 +6,7 @@ import { useAuthStore } from '@/context/useAuthStore';
 import { ReactNode } from 'react';
 
 interface Props {
-  allowedRoles: string[];
+  allowedRoles: "ADMIN" | "SELLER" | "CUSTOMER";
   children: ReactNode;
 }
 
