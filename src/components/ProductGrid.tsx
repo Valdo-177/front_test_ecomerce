@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useAllProducts } from "@/hooks/useProducts"
-import { ProductCard } from "./ui/ProductCard"
-import { ProductCardSkeleton } from "./ui/ProductCardSkeleton"
-import type { Category } from "@/types"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { useAllProducts } from "@/hooks/useProducts";
+import { ProductCard } from "./ui/ProductCard";
+import type { Category } from "@/types";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { ProductCardSkeleton } from "./ui/ProductCardSkeleton";
 
 export const ProductGrid = () => {
-  const { data, isLoading, error } = useAllProducts()
+  const { data, isLoading, error } = useAllProducts();
 
   if (isLoading) {
     return (
@@ -25,32 +25,34 @@ export const ProductGrid = () => {
           </div>
         ))}
       </div>
-    )
+    );
   }
 
-  if (error) return <p>Failed to fetch products.</p>
+  if (error) return <p>Failed to fetch products.</p>;
 
   return (
     <div className="space-y-10">
       {data.map((category: Category) => {
-        const maxProducts = 8 // 2 filas x 4 productos
-        const visibleProducts = category.products.slice(0, maxProducts)
-        const hasMoreProducts = category.products.length > maxProducts
-        const remainingCount = category.products.length - maxProducts
+        const maxProducts = 8; // 2 filas x 4 productos
+        const visibleProducts = category.products.slice(0, maxProducts);
+        const hasMoreProducts = category.products.length > maxProducts;
+        const remainingCount = category.products.length - maxProducts;
 
         return (
           <div key={category.id}>
             <h2 className="text-xl font-bold mb-4">{category.name}</h2>
 
             {category.products.length === 0 ? (
-              <p className="text-sm text-gray-500">No products in this category.</p>
+              <p className="text-sm text-gray-500">
+                No products in this category.
+              </p>
             ) : (
               <div className="relative">
                 {/* Grid de productos */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
                   {visibleProducts.map((product, index) => {
                     // Si es el último producto de la segunda fila y hay más productos
-                    const isLastInSecondRow = index === 7 && hasMoreProducts
+                    const isLastInSecondRow = index === 7 && hasMoreProducts;
 
                     return (
                       <div key={product.id} className="relative">
@@ -58,7 +60,7 @@ export const ProductGrid = () => {
 
                         {/* Overlay "See more" en el último producto si hay más */}
                         {isLastInSecondRow && (
-                          <div className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                          <div className="absolute inset-0 bg-black/20 rounded-xl flex items-center justify-center backdrop-blur-xs">
                             <Link
                               href={`/category/${category.id}`}
                               className="bg-white text-black px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gray-100 transition-colors flex items-center gap-2 shadow-lg"
@@ -69,7 +71,7 @@ export const ProductGrid = () => {
                           </div>
                         )}
                       </div>
-                    )
+                    );
                   })}
                 </div>
 
@@ -88,17 +90,11 @@ export const ProductGrid = () => {
               </div>
             )}
           </div>
-        )
+        );
       })}
     </div>
-  )
-}
-
-
-
-
-
-
+  );
+};
 
 // "use client";
 

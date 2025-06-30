@@ -53,3 +53,29 @@ export interface Product {
     updatedAt:   Date;
     categoryId:  number;
 }
+
+export interface ResponseProductById  {
+    message: string;
+    product: ProductDetails;
+}
+
+export interface ProductDetails {
+    id:          number;
+    name:        string;
+    description: string;
+    price:       number;
+    stock:       number;
+    imageUrl:    string;
+    categoryId:  number;
+    sellerId:    number;
+    createdAt:   Date;
+    updatedAt:   Date;
+    category:    Category;
+    seller:      Seller;
+}
+
+export interface Seller {
+    id:      number;
+    email:   string;
+    profile: Profile;
+}
