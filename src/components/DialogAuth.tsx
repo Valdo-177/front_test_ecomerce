@@ -13,17 +13,16 @@ export function DialogAuth() {
   const [changeTypeAuth, setChangeTypeAuth] = useState<"signIn" | "signUp">(
     "signIn"
   );
-  const [open, setOpen] = useState(false);
-  const { isAuthenticated, user, logout } = useAuthStore();
+  const { isAuthenticated, openLoginDialog, setOpenLoginDialog } = useAuthStore();
 
   const handleChangeTypeAuth = () => {
     setChangeTypeAuth((prev) => (prev === "signIn" ? "signUp" : "signIn"));
   };
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => setOpenLoginDialog(false);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={openLoginDialog} onOpenChange={setOpenLoginDialog}>
       {isAuthenticated ? (
         <div className="flex items-center gap-1 cursor-pointer">
           <LogoutButton />

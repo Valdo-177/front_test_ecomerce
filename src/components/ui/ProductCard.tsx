@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/context/useAuthStore";
 
 interface Product {
   id: number;
@@ -21,19 +22,15 @@ export const ProductCard = ({ product }: { product: Product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const ImageUrl = `http://localhost:5000${product.imageUrl}`;
+  const { isAuthenticated, setOpenLoginDialog } = useAuthStore();
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("Added to cart:", product.id);
+    if (!isAuthenticated) {
+      setOpenLoginDialog(true);
+      return;
+    }
   };
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFavorite(!isFavorite);
-    console.log("Toggle favorite:", product.id);
-  };
 
   return (
     <Link href={`/product/${product.id}`} className="block">

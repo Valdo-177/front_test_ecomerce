@@ -79,3 +79,16 @@ export interface Seller {
     email:   string;
     profile: Profile;
 }
+
+export interface ResponseProductsByCategory {
+    message:    string;
+    category:   Category;
+    products:   Product[];
+    pagination: Pagination;
+}
+export interface Pagination {
+    total:      number;
+    page:       number;
+    limit:      number;
+    totalPages: number;
+}

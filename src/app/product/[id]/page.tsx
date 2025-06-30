@@ -22,12 +22,14 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { ProductDetailSkeleton } from "@/components/ui/ProductDetailSkeleton";
+import { useAuthStore } from "@/context/useAuthStore";
 
 const ProductPage = () => {
   const params = useParams();
   const productId = Number(params.id);
   const { data: product, isLoading, error } = useProductById(productId);
   const [quantity, setQuantity] = useState(1);
+  const { isAuthenticated, setOpenLoginDialog } = useAuthStore();
 
   const ImageUrl = `http://localhost:5000${product?.imageUrl}`;
 
@@ -39,6 +41,10 @@ const ProductPage = () => {
   };
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      setOpenLoginDialog(true);
+      return;
+    }
     console.log("Added to cart:", { productId, quantity });
   };
 
@@ -70,7 +76,7 @@ const ProductPage = () => {
               className="object-contain p-4"
             />
           </div>
-{/* 
+          {/* 
           <div className="flex gap-2">
             <div className="w-20 h-20 border-2 border-orange-500 rounded-lg overflow-hidden">
               <Image
